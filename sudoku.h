@@ -1,5 +1,13 @@
 #pragma once
 
+#include <iostream>
+
+using std::cout;
+using std::cin;
+using std::string;
+using std::stoi;
+using std::endl;
+
 class sudoku {
   public:
     sudoku();
