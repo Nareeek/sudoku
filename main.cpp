@@ -12,10 +12,12 @@ int main()
     s.print();
     
     cout << "\n\nafter solving the problem \n";
-    
-    // TODO is valid sudoku
-    s.solve();
-    s.print();
+
+    if(s.is_valid_sudoku_input(s.grid, s.size)){
+      s.solve();
+    }else{
+        throw 0;
+    }
   }
   catch(const int& e){
     cout << "\nERROR\n";

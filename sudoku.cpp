@@ -11,12 +11,10 @@ void validate_number(string str){
 
 
 void validate_range(int number){
-  if(number <= 0 || number >= 10){
+  if(number < 0 || number >= 10){
     throw 0;
   }
 }
-
-
 
 
 
@@ -45,6 +43,10 @@ void sudoku::enterDigits(){
   }
 }
 
+//TODO implementation.
+bool sudoku::is_valid_sudoku_input(int grid[][9], int size){
+  return true;
+}
  
 bool sudoku::is_possible_number(int y, int x, int number){
   for (int i = 0; i < size; i++){
@@ -74,8 +76,10 @@ bool sudoku::is_possible_number(int y, int x, int number){
 
 
 void sudoku::solve(){
-  for (int y = 1; y < size+1; y++){
-    for (int x = 1; x < size+1; x++){
+  static int counter = 0;
+
+  for (int y = 0; y < size; y++){
+    for (int x = 0; x < size; x++){
       if (grid[y][x] == 0){
         for (int n = 1; n < size+1; n++){
           if (is_possible_number(y, x, n)){
@@ -87,7 +91,13 @@ void sudoku::solve(){
         return;
       }
     }
+    counter++;
+    if(counter > 1000000){
+      cout << "\nrecursion depth: " << counter;
+      throw 0;
+    }
   }
+  print();
 }
 
 
