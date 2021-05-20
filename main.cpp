@@ -12,11 +12,11 @@ int main()
     s.print();
     
     cout << "\n\nafter solving the problem \n";
-
-    if(s.is_valid_sudoku_input(s.grid, s.size)){
-      s.solve();
+   
+    if(!(s.is_valid_sudoku_input(s.grid, s.size))){
+      throw 0;
     }else{
-        throw 0;
+      s.solve();
     }
   }
   catch(const int& e){

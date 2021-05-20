@@ -1,15 +1,14 @@
 #pragma once
 
 #include <iostream>
-
+#include <vector>
 
 using std::cout;
 using std::cin;
 using std::string;
 using std::stoi;
 using std::endl;
-
-
+using std::vector;
 
 class sudoku {
   public:
