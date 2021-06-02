@@ -1,78 +1,135 @@
-#include <iostream>
 #include "sudoku.h"
 
 
+
 sudoku::sudoku(){
-    for (int i = 0; i < 9; i++){
-        for (int j = 0; j < 9; j++){
+    for (int i = 0; i < size; i++){
+        for (int j = 0; j < size; j++){
             grid[i][j] = 0;
         }
     }
 }
 
 
-void sudoku::enterDigits(){
-  bool is_correct_row = true;
-  bool is_valid_number = true;
-    for (int i = 0; i < 9; ){
-      std::cout << "Enter " << i + 1 << " row numbers: " << std::endl;
-      for (int j = 0; j < 9; j++){
-        std::cin >> grid[i][j];
 
-        // TODO - check when multiple times typing incorrect row
-        if (!(grid[i][j] >= 0 && grid[i][j] <= 9) && is_valid_number){
-          is_valid_number = false;
-          is_correct_row = false;
-          std::cout << "\nInvalid value(s), try again " << i + 1 << "-row\n";
-      } 
+void sudoku::print(){
+    cout << "\n";
+    for (int i = 0; i < size; i++){
+        for (int j = 0; j < size; j++){
+            cout << grid[i][j] << " ";
+        }
+        cout << "\n";
     }
-    if (is_correct_row){
-      i++;
-      std::cout << std::endl;
+}
+
+
+
+
+void validate_number(string str){
+  for(int i = 0; i < str.size(); i++){
+    if(!(isdigit(str[i]))){
+      throw 0;
     }
-    else{
-      is_correct_row = true;
-      continue;
-      
-    }
-    
   }
 }
 
 
 
-bool sudoku::is_possible_number(int y, int x, int number){
-  for (int i = 0; i < 9; i++){
-    if (grid[y][i] == number){
-      return false;
-    }
+
+void validate_range(int number){
+  if(number < 0 || number >= 10){
+    throw 0;
   }
+}
 
-  for (int i = 0; i < 9; i++){
-    if (grid[i][x] == number){
-      return false;
-    }
+
+
+
+void sudoku::enterDigits(){
+  for (int i = 0; i < size; i++){
+    cout << "\nEnter " << i + 1 << " row numbers: " << std::endl;
+    for (int j = 0; j < size; j++){
+      string str;
+      cin >> str;
+      validate_number(str);
+      
+      int number = stoi(str);
+      validate_range(number);
+      
+      grid[i][j] = number;
+    } 
   }
+}
 
-    int x0 = int(x / 3) * 3;
-    int y0 = int(y / 3) * 3;
 
-    for (int i = 0; i < 3; i++){
-      for (int j = 0; j < 3; j++){
-        if (grid[y0 + i][x0 + j] == number){
-                return false;
+
+
+bool sudoku::is_valid_sudoku_input(int grid[][9], int n){
+    // checking the uniqueness of row numbers
+    for(int i = 0; i < n; i++) {
+        vector<bool> v(n, false);
+        for(int j = 0;j < n; j++) {
+            if (grid[i][j] != 0) {
+                int index = grid[i][j];
+                if (v[index]) {
+		    cout << "\nSame row numbrs!";
+                    return false;
+                } 
+                v[index] = true;
+            }
         }
-      }
+    }
+    
+    // checking the uniqueness of column numbers
+    for(int j = 0; j < n; j++) {
+        vector<bool> v(n, false);
+        for(int i = 0; i < n; i++) {
+            if (grid[i][j] != 0) {
+                int index = grid[i][j];
+                if (v[index]) {
+		    cout << "\nSame column numbers!";
+                    return false;
+                } 
+                v[index] = true;
+            }
+        }
+    }
+    
+    // checking the uniqueness of 3x3 grid numbers
+    for(int k = 0; k < n; k++) {
+        int r = (k / 3) * 3;
+        int c = (k % 3) * 3;
+        vector<int> v = {
+            grid[r][c], grid[r][c+1], grid[r][c+2],
+            grid[r+1][c], grid[r+1][c+1], grid[r+1][c+2],
+            grid[r+2][c], grid[r+2][c+1], grid[r+2][c+2]  };
+        
+        vector<bool> vb(n, false);
+       
+        for(int i = 0; i < n; i++) {
+            if(v[i]!= 0) {
+                int index = v[i];
+                if(vb[index]){
+		    cout << "\nSame 3x3 grid numbers!";    
+		    return false;
+		}
+                vb[index] = true;
+            }
+        }        
     }
     return true;
 }
 
 
+
+
 void sudoku::solve(){
-  for (int y = 0; y < 9; y++){
-    for (int x = 0; x < 9; x++){
+  static int counter = 0;
+
+  for (int y = 0; y < size; y++){
+    for (int x = 0; x < size; x++){
       if (grid[y][x] == 0){
-        for (int n = 1; n < 10; n++){
+        for (int n = 1; n < size+1; n++){
           if (is_possible_number(y, x, n)){
             grid[y][x] = n;
             solve();
@@ -83,16 +140,42 @@ void sudoku::solve(){
       }
     }
   }
+
+  if(counter > 3){
+    cout << "\nMultiple solutions: " << counter;
+      throw 0;
+    }
+
+  counter++;
   print();
 }
 
 
-void sudoku::print(){
-    std::cout << "\n";
-    for (int i = 0; i < 9; i++){
-        for (int j = 0; j < 9; j++){
-            std::cout << grid[i][j] << " ";
-        }
-        std::cout << "\n";
+
+
+bool sudoku::is_possible_number(int y, int x, int number){
+  for (int i = 0; i < size; i++){
+    if (grid[y][i] == number){
+      return false;
     }
+  }
+
+  for (int i = 0; i < size; i++){
+    if (grid[i][x] == number){
+      return false;
+    }
+  }
+
+    int x1 = int(x / 3) * 3;
+    int y1 = int(y / 3) * 3;
+
+    for (int i = 0; i < 3; i++){
+      for (int j = 0; j < 3; j++){
+        if (grid[y1 + i][x1 + j] == number){
+                return false;
+        }
+      }
+    }
+    return true;
 }
+
