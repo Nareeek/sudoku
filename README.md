@@ -1,2 +1,2 @@
 # sudoku
-Simple sudoku solver in C++
+# Simple sudoku solver in C++
