@@ -12,6 +12,16 @@ sudoku::sudoku(){
 
 
 
+sudoku::sudoku(int grid[][9]){
+    for (int i = 0; i < size; i++){
+        for (int j = 0; j < size; j++){
+            this->grid[i][j] = grid[i][j];
+        }
+    }
+}
+
+
+
 void sudoku::print(){
     cout << "\n";
     for (int i = 0; i < size; i++){
@@ -72,7 +82,7 @@ bool sudoku::is_valid_sudoku_input(int grid[][9], int n){
             if (grid[i][j] != 0) {
                 int index = grid[i][j];
                 if (v[index]) {
-		    cout << "\nSame row numbrs!";
+		    cout << "\n\nSame row numbers!\n\n";
                     return false;
                 } 
                 v[index] = true;
@@ -87,7 +97,7 @@ bool sudoku::is_valid_sudoku_input(int grid[][9], int n){
             if (grid[i][j] != 0) {
                 int index = grid[i][j];
                 if (v[index]) {
-		    cout << "\nSame column numbers!";
+		    cout << "\n\nSame column numbers!\n\n";
                     return false;
                 } 
                 v[index] = true;
@@ -110,7 +120,7 @@ bool sudoku::is_valid_sudoku_input(int grid[][9], int n){
             if(v[i]!= 0) {
                 int index = v[i];
                 if(vb[index]){
-		    cout << "\nSame 3x3 grid numbers!";    
+		    cout << "\n\nSame 3x3 grid numbers!\n\n";    
 		    return false;
 		}
                 vb[index] = true;
@@ -147,7 +157,12 @@ void sudoku::solve(){
     }
 
   counter++;
-  print();
+  //print();
+  for(int i = 0; i < size; ++i){
+    for(int j = 0; j < size; ++j){
+      result[i][j] = grid[i][j];
+    }
+  }
 }
 
 
